@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { ChevronDown, ChevronUp, Repeat } from 'lucide-react';
+import { ChevronDown, ChevronUp, Repeat, Volume2, VolumeX } from 'lucide-react';
 import VideoTemplate, { SCENE_DURATIONS } from './VideoTemplate';
 import { useSceneControls } from '@/hooks/useSceneControls';
 
@@ -9,11 +9,13 @@ interface ControlBarProps {
   visible: boolean;
   collapsed: boolean;
   locked: boolean;
+  muted: boolean;
   sceneKeys: string[];
   activeIndex: number;
   activeDuration: number;
   tick: number;
   onToggleLock: () => void;
+  onToggleMute: () => void;
   onJumpTo: (index: number) => void;
   onToggleCollapsed: () => void;
 }
@@ -65,8 +67,8 @@ function ProgressSegments({
 }
 
 function ControlBar({
-  visible, collapsed, locked, sceneKeys, activeIndex, activeDuration, tick,
-  onToggleLock, onJumpTo, onToggleCollapsed,
+  visible, collapsed, locked, muted, sceneKeys, activeIndex, activeDuration, tick,
+  onToggleLock, onToggleMute, onJumpTo, onToggleCollapsed,
 }: ControlBarProps) {
   return (
     <div
@@ -89,6 +91,20 @@ function ControlBar({
         aria-pressed={locked}
       >
         <Repeat className="w-8 h-8" />
+      </button>
+
+      <button
+        onClick={onToggleMute}
+        className={`w-14 h-14 flex items-center justify-center transition-colors rounded-lg shrink-0 ${
+          muted
+            ? 'text-white/60 hover:text-white hover:bg-white/10'
+            : 'text-white bg-white/15 hover:bg-white/25'
+        }`}
+        title={muted ? 'Unmute voiceover' : 'Mute voiceover'}
+        aria-label={muted ? 'Unmute voiceover' : 'Mute voiceover'}
+        aria-pressed={!muted}
+      >
+        {muted ? <VolumeX className="w-8 h-8" /> : <Volume2 className="w-8 h-8" />}
       </button>
 
       <div className="w-px self-stretch bg-white/15" aria-hidden="true" />
@@ -130,6 +146,7 @@ export default function VideoWithControls() {
   const [collapsed, setCollapsed] = useState(false);
   const [hovering, setHovering] = useState(false);
   const [tapPinned, setTapPinned] = useState(false);
+  const [muted, setMuted] = useState(true);
 
   const handlePointerEnter = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
     if (e.pointerType === 'mouse') setHovering(true);
@@ -146,6 +163,9 @@ export default function VideoWithControls() {
       if (!c) { setHovering(false); setTapPinned(false); }
       return !c;
     });
+  }, []);
+  const handleToggleMute = useCallback(() => {
+    setMuted(m => !m);
   }, []);
 
   useEffect(() => {
@@ -169,6 +189,7 @@ export default function VideoWithControls() {
         key={mountKey}
         durations={durations}
         loop
+        muted={muted}
         onSceneChange={onSceneChange}
       />
       <div
@@ -184,11 +205,13 @@ export default function VideoWithControls() {
           visible={barVisible}
           collapsed={collapsed}
           locked={locked}
+          muted={muted}
           sceneKeys={sceneKeys}
           activeIndex={activeIndex}
           activeDuration={activeDuration}
           tick={tick}
           onToggleLock={toggleLock}
+          onToggleMute={handleToggleMute}
           onJumpTo={jumpTo}
           onToggleCollapsed={handleToggleCollapsed}
         />

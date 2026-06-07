@@ -1,0 +1,32 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "Vdry02sCYq7oODkxf_6Rf"
+uri = "file://artifacts/utilityhub-video/public/audio/vo_reveal.mp3"
+type = "audio"
+title = "reveal voiceover"
+
+[[outputs]]
+id = "mNTzHAjGke4tAVoN3YHA4"
+uri = "file://artifacts/utilityhub-video/public/audio/vo_problem.mp3"
+type = "audio"
+title = "problem voiceover"
+
+[[outputs]]
+id = "dPhsrc1TdQXYZOt5PO0iY"
+uri = "file://artifacts/utilityhub-video/public/audio/vo_intro.mp3"
+type = "audio"
+title = "intro voiceover"
+
+[[outputs]]
+id = "NAzmR0lKcTBHyeR70tv6N"
+uri = "file://artifacts/utilityhub-video/public/audio/vo_outro.mp3"
+type = "audio"
+title = "outro voiceover"
+
+[[outputs]]
+id = "sAM0i-AcgPoxgUaVNjmce"
+uri = "file://artifacts/utilityhub-video/public/audio/vo_value.mp3"
+type = "audio"
+title = "value voiceover"
