@@ -10,6 +10,8 @@ servers:
 tags:
   - name: health
     description: Health operations
+  - name: push
+    description: Push notification operations
 paths:
   /healthz:
     get:
@@ -24,6 +26,56 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /push-tokens:
+    post:
+      operationId: registerPushToken
+      tags: [push]
+      summary: Register a push token
+      description: Registers a device push token for push notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PushTokenInput"
+      responses:
+        "201":
+          description: Token registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PushTokenRecord"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /push-tokens/send-test:
+    post:
+      operationId: sendTestNotification
+      tags: [push]
+      summary: Send a test push notification
+      description: Sends a test push notification to a registered device token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TestNotificationInput"
+      responses:
+        "200":
+          description: Notification sent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NotificationSendResult"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +85,59 @@ components:
           type: string
       required:
         - status
-
+    PushTokenInput:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Expo push token (e.g. ExponentPushToken[...])
+        platform:
+          type: string
+          description: Device platform (ios, android, web)
+      required:
+        - token
+        - platform
+    PushTokenRecord:
+      type: object
+      properties:
+        id:
+          type: integer
+        token:
+          type: string
+        platform:
+          type: string
+      required:
+        - id
+        - token
+        - platform
+    TestNotificationInput:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Expo push token to send the notification to
+        title:
+          type: string
+          description: Notification title
+        body:
+          type: string
+          description: Notification body text
+      required:
+        - token
+    NotificationSendResult:
+      type: object
+      properties:
+        status:
+          type: string
+        receipt:
+          type: object
+          additionalProperties: true
+      required:
+        - status
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
