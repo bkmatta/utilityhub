@@ -123,7 +123,7 @@ export default function CategoryPage({ slug }: CategoryPageProps) {
         ))}
       </section>
 
-      <AdSense adSlot="category-page-bottom" />
+      <AdSense />
     </div>
   );
 }

@@ -97,7 +97,7 @@ export default function ToolPage({ slug }: ToolPageProps) {
         )}
       </section>
 
-      <AdSense adSlot="tool-page-bottom" />
+      <AdSense />
 
       <section className="border-t border-zinc-200 dark:border-zinc-800/85 pt-4">
         <SeoContent slug={tool.slug} />

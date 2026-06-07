@@ -336,7 +336,7 @@ export default function Home() {
           </div>
         </section>
 
-        <AdSense adSlot="home-page-bottom" />
+        <AdSense />
       </div>
 
       {/* Footer */}
