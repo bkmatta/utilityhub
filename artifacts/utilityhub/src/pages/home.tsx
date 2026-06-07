@@ -5,71 +5,87 @@ import { Tool } from '@/types/tool';
 import { getTrendingTools, getToolBySlug } from '@/lib/registry';
 import AdSense from '@/components/adsense';
 import { useFavorites } from '@/hooks/useFavorites';
+import {
+  ArrowRight,
+  Calculator,
+  FileText,
+  Coins,
+  HeartPulse,
+  Image as ImageIcon,
+  Code,
+  Briefcase,
+  Wrench,
+  Star,
+  TrendingUp,
+  Settings2,
+  Zap,
+  Search,
+} from 'lucide-react';
 
 const categories = [
   {
-    name: 'Finance Tools',
+    name: 'Finance',
     slug: 'finance',
     desc: 'EMI, SIP, Loan, Compound Interest, Tax, and Inflation planners.',
-    icon: '💵',
-    color: 'border-emerald-500/20 dark:border-emerald-500/10 hover:border-emerald-500 hover:shadow-emerald-500/5',
-    tagColor: 'bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-450',
+    icon: Coins,
+    color: 'bg-amber-100 text-amber-800',
+    bg: 'bg-amber-50',
   },
   {
-    name: 'Health Tools',
+    name: 'Health',
     slug: 'health',
     desc: 'BMI, BMR, Calorie, Macros, Ovulation, and Ideal Weight estimators.',
-    icon: '❤️',
-    color: 'border-rose-500/20 dark:border-rose-500/10 hover:border-rose-500 hover:shadow-rose-500/5',
-    tagColor: 'bg-rose-50 dark:bg-rose-950/30 text-rose-600 dark:text-rose-450',
+    icon: HeartPulse,
+    color: 'bg-rose-100 text-rose-800',
+    bg: 'bg-rose-50',
   },
   {
-    name: 'General Calculators',
-    slug: 'general',
-    desc: 'Age trackers, Date offsets, Discounts, Tip splits, and Percentages.',
-    icon: '📊',
-    color: 'border-amber-500/20 dark:border-amber-500/10 hover:border-amber-500 hover:shadow-amber-500/5',
-    tagColor: 'bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-450',
-  },
-  {
-    name: 'Unit Converters',
-    slug: 'converters',
-    desc: 'Currency, Length, Weight, Temperature, Pressure, and Speed codecs.',
-    icon: '🔄',
-    color: 'border-blue-500/20 dark:border-blue-500/10 hover:border-blue-500 hover:shadow-blue-500/5',
-    tagColor: 'bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-450',
-  },
-  {
-    name: 'PDF Utilities',
+    name: 'PDF',
     slug: 'pdf',
-    desc: 'Secure browser-side PDF Merge, Split, Compress, Sign, and OCR text extraction.',
-    icon: '📄',
-    color: 'border-indigo-500/20 dark:border-indigo-500/10 hover:border-indigo-500 hover:shadow-indigo-500/5',
-    tagColor: 'bg-indigo-50 dark:bg-indigo-950/30 text-indigo-600 dark:text-indigo-450',
+    desc: 'Merge, split, compress, and sign PDF documents — entirely in your browser.',
+    icon: FileText,
+    color: 'bg-violet-100 text-violet-800',
+    bg: 'bg-violet-50',
   },
   {
-    name: 'Developer Tools',
+    name: 'Developer',
     slug: 'developer',
-    desc: 'JSON/XML formatters, UUID random generators, JWT decoders, and Base64 streams.',
-    icon: '🛠️',
-    color: 'border-slate-500/20 dark:border-slate-500/10 hover:border-slate-500 hover:shadow-slate-500/5',
-    tagColor: 'bg-slate-50 dark:bg-slate-950/30 text-slate-650 dark:text-slate-400',
+    desc: 'JSON/XML formatters, UUID generators, JWT decoders, and Base64 utilities.',
+    icon: Code,
+    color: 'bg-slate-200 text-slate-800',
+    bg: 'bg-slate-50',
   },
   {
-    name: 'Image Tools',
+    name: 'Image',
     slug: 'image',
-    desc: 'Browser-side Image Compressor, Resizer, HEIC to JPG, WebP, and Background Remover.',
-    icon: '🖼️',
-    color: 'border-violet-500/20 dark:border-violet-500/10 hover:border-violet-500 hover:shadow-violet-500/5',
-    tagColor: 'bg-violet-50 dark:bg-violet-950/30 text-violet-600 dark:text-violet-400',
+    desc: 'Resize, compress, convert, and optimize images without uploading anywhere.',
+    icon: ImageIcon,
+    color: 'bg-orange-100 text-orange-800',
+    bg: 'bg-orange-50',
   },
   {
-    name: 'Business Utilities',
+    name: 'Business',
     slug: 'business',
-    desc: 'Professional Invoice & Quote Generators, Salary Estimators, and Profit Margins.',
-    icon: '💼',
-    color: 'border-cyan-500/20 dark:border-cyan-500/10 hover:border-cyan-500 hover:shadow-cyan-500/5',
-    tagColor: 'bg-cyan-50 dark:bg-cyan-950/30 text-cyan-600 dark:text-cyan-400',
+    desc: 'Invoice generators, salary estimators, profit margins, and more.',
+    icon: Briefcase,
+    color: 'bg-blue-100 text-blue-800',
+    bg: 'bg-blue-50',
+  },
+  {
+    name: 'Converters',
+    slug: 'converters',
+    desc: 'Currency, length, weight, temperature, pressure, and speed codecs.',
+    icon: Zap,
+    color: 'bg-emerald-100 text-emerald-800',
+    bg: 'bg-emerald-50',
+  },
+  {
+    name: 'General',
+    slug: 'general',
+    desc: 'Age trackers, date offsets, discounts, tip splits, and percentages.',
+    icon: Wrench,
+    color: 'bg-stone-200 text-stone-800',
+    bg: 'bg-stone-50',
   },
 ];
 
@@ -82,8 +98,8 @@ function StarButton({ slug, className = '' }: { slug: string; className?: string
       title={pinned ? 'Unpin tool' : 'Pin to top'}
       className={`flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-all ${
         pinned
-          ? 'text-violet-600 bg-violet-50 dark:bg-violet-950/40 border border-violet-300 dark:border-violet-800'
-          : 'text-zinc-300 dark:text-zinc-600 hover:text-violet-500 hover:bg-violet-50 dark:hover:bg-violet-950/30 border border-transparent hover:border-violet-200 dark:hover:border-violet-800'
+          ? 'text-amber-600 bg-amber-50 border border-amber-300'
+          : 'text-stone-300 hover:text-amber-500 hover:bg-amber-50 border border-transparent hover:border-amber-200'
       } ${className}`}
     >
       <svg
@@ -125,148 +141,234 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="space-y-16 pb-24">
+    <div className="min-h-screen bg-[#fafaf9] text-stone-900 selection:bg-amber-200">
+      <style dangerouslySetInnerHTML={{__html: `
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600&display=swap');
+        .font-editorial { font-family: 'Playfair Display', serif; }
+      `}} />
+
       {/* Hero */}
-      <section className="relative text-center py-20 px-4 bg-gradient-to-b from-zinc-100 to-zinc-50 dark:from-zinc-950 dark:to-zinc-950 border-b border-zinc-200/50 dark:border-zinc-900/50 transition-colors">
-        <div className="max-w-4xl mx-auto space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-violet-50 dark:bg-violet-950/30 border border-violet-200/60 dark:border-violet-900/50 text-violet-600 dark:text-violet-400 rounded-full text-xs font-semibold">
-            ✨ Free & 100% Private Client-Side Executions
+      <section className="border-b border-stone-200/60 bg-[#fafaf9]">
+        <div className="max-w-6xl mx-auto px-6 py-16 md:py-24 flex flex-col md:flex-row gap-12 lg:gap-20 items-center">
+          {/* Left: Headline */}
+          <div className="flex-1 space-y-7">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-100 text-amber-800 rounded-full text-xs font-semibold">
+              <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+              Free &amp; 100% Private
+            </div>
+            <h1 className="font-editorial text-5xl md:text-6xl lg:text-7xl leading-[1.08] text-stone-900">
+              Your ultimate digital{' '}
+              <span className="italic text-violet-700">utility</span>{' '}
+              workspace.
+            </h1>
+            <p className="text-lg text-stone-600 leading-relaxed max-w-md font-light">
+              Free tools for finance, health, PDF, development, and more. Runs entirely in your browser — nothing ever leaves your device.
+            </p>
+            <div className="pt-2 max-w-lg">
+              <SearchBar />
+            </div>
+            <div className="flex flex-wrap gap-2 text-xs text-stone-500 pt-1">
+              <span className="font-medium">Try:</span>
+              <Link href="/tools/bmi-calculator" className="hover:text-amber-600 underline underline-offset-2 transition-colors">BMI Calculator</Link>
+              <span>·</span>
+              <Link href="/tools/emi-calculator" className="hover:text-amber-600 underline underline-offset-2 transition-colors">EMI Calculator</Link>
+              <span>·</span>
+              <Link href="/tools/pdf-merge" className="hover:text-amber-600 underline underline-offset-2 transition-colors">PDF Merge</Link>
+              <span>·</span>
+              <Link href="/tools/currency-converter" className="hover:text-amber-600 underline underline-offset-2 transition-colors">Currency Converter</Link>
+            </div>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-black text-zinc-900 dark:text-zinc-50 tracking-tight leading-none">
-            Your Ultimate Digital <span className="bg-gradient-to-r from-violet-600 to-indigo-500 bg-clip-text text-transparent">Utility Workspace</span>
-          </h1>
-          <p className="max-w-xl mx-auto text-sm sm:text-base text-zinc-500 dark:text-zinc-400 font-light leading-relaxed">
-            Zero limits. Secure local processing. Run standard calculators, PDF utilities, converters, and developer formatters instantly.
-          </p>
-          <div className="pt-4">
-            <SearchBar />
-          </div>
-          <div className="pt-2 flex flex-wrap justify-center items-center gap-2 text-xs text-zinc-400">
-            <span>Try searching:</span>
-            <Link href="/tools/bmi-calculator" className="text-zinc-600 dark:text-zinc-350 hover:text-violet-600 underline">BMI Calculator</Link>
-            <span>•</span>
-            <Link href="/tools/emi-calculator" className="text-zinc-600 dark:text-zinc-350 hover:text-violet-600 underline">EMI Calculator</Link>
-            <span>•</span>
-            <Link href="/tools/pdf-merge" className="text-zinc-600 dark:text-zinc-350 hover:text-violet-600 underline">PDF Merge</Link>
-            <span>•</span>
-            <Link href="/tools/currency-converter" className="text-zinc-600 dark:text-zinc-350 hover:text-violet-600 underline">Currency Converter</Link>
+
+          {/* Right: Featured Tool Card */}
+          <div className="flex-1 relative w-full max-w-md md:max-w-none">
+            <div className="absolute inset-0 bg-gradient-to-tr from-violet-200 to-amber-100 rounded-[2.5rem] rotate-3 scale-105 opacity-50 blur-xl pointer-events-none" />
+            <Link
+              href="/tools/pdf-merge"
+              className="relative bg-white p-8 rounded-[2rem] shadow-xl border border-stone-100 flex flex-col gap-6 -rotate-1 hover:rotate-0 transition-transform duration-500 block"
+            >
+              <div className="flex items-center justify-between border-b border-stone-100 pb-4">
+                <div>
+                  <h3 className="font-editorial font-semibold text-2xl">Featured Tool</h3>
+                  <p className="text-sm text-stone-500">Editor's Choice</p>
+                </div>
+                <div className="w-12 h-12 rounded-full bg-violet-100 flex items-center justify-center text-violet-600">
+                  <FileText className="w-6 h-6" />
+                </div>
+              </div>
+              <div>
+                <h4 className="text-xl font-medium mb-2">Smart PDF Merger</h4>
+                <p className="text-stone-600 text-sm leading-relaxed mb-6">
+                  Combine multiple PDFs instantly. Your files never leave your device, ensuring complete privacy and security.
+                </p>
+                <div className="space-y-3">
+                  <div className="h-2 bg-stone-100 rounded-full overflow-hidden">
+                    <div className="h-full bg-violet-500 w-2/3 rounded-full" />
+                  </div>
+                  <div className="flex justify-between text-xs text-stone-400 font-medium">
+                    <span>Processing local files...</span>
+                    <span>66%</span>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-stone-200 hover:border-violet-300 hover:bg-violet-50 text-violet-700 font-medium text-sm transition-colors">
+                Try it now <ArrowRight className="w-4 h-4" />
+              </div>
+            </Link>
+            <div className="absolute -bottom-5 -left-5 bg-amber-400 text-amber-950 p-4 rounded-2xl shadow-lg -rotate-6 hidden md:block">
+              <div className="flex items-center gap-2 font-medium text-sm">
+                <Settings2 className="w-4 h-4" /> 100% Private
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Pinned Tools */}
-      {pinnedTools.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-violet-50/60 dark:bg-violet-950/20 border border-violet-200/60 dark:border-violet-900/50 rounded-3xl p-6">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-violet-500">
-                  <path d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
-                </svg>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400">Pinned Tools</h3>
-              </div>
-              <span className="text-[10px] text-violet-400 dark:text-violet-500">{pinnedTools.length} pinned</span>
+      <div className="max-w-6xl mx-auto px-6 space-y-20 py-16 pb-24">
+
+        {/* Pinned Tools */}
+        {pinnedTools.length > 0 && (
+          <section>
+            <div className="flex items-baseline justify-between mb-6 border-b border-stone-200 pb-4">
+              <h2 className="font-editorial text-2xl text-stone-900">Pinned Tools</h2>
+              <span className="text-xs text-stone-400">{pinnedTools.length} pinned</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {pinnedTools.map((tool) => (
                 <div key={tool.id} className="relative group">
                   <Link
                     href={`/tools/${tool.slug}`}
-                    className="flex items-center justify-between p-3 bg-white dark:bg-zinc-900 border border-violet-200/60 dark:border-violet-900/40 rounded-2xl hover:border-violet-500 transition-all shadow-sm pr-10"
+                    className="flex items-center justify-between p-4 bg-white border border-stone-100 rounded-2xl hover:border-amber-200 hover:shadow-md transition-all shadow-sm pr-10"
                   >
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-zinc-800 dark:text-zinc-100 truncate">{tool.title}</p>
-                      <p className="text-[10px] text-zinc-400 truncate mt-0.5">{tool.description}</p>
+                      <p className="text-sm font-semibold text-stone-800 truncate">{tool.title}</p>
+                      <p className="text-xs text-stone-400 truncate mt-0.5">{tool.description}</p>
                     </div>
                   </Link>
-                  <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                  <div className="absolute right-2.5 top-1/2 -translate-y-1/2">
                     <StarButton slug={tool.slug} />
                   </div>
                 </div>
               ))}
             </div>
-          </div>
-        </section>
-      )}
+          </section>
+        )}
 
-      {/* Recently Used */}
-      {recentTools.length > 0 && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-4">Recently Used Tools</h3>
+        {/* Recently Used */}
+        {recentTools.length > 0 && (
+          <section>
+            <div className="flex items-baseline justify-between mb-6 border-b border-stone-200 pb-4">
+              <h2 className="font-editorial text-2xl text-stone-900">Recently Used</h2>
+            </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {recentTools.map((tool) => (
                 <Link
                   key={tool.id}
                   href={`/tools/${tool.slug}`}
-                  className="p-3 bg-zinc-50 dark:bg-zinc-950 border border-zinc-200/50 dark:border-zinc-900 rounded-2xl hover:border-violet-600 transition-all flex items-center gap-3 text-xs text-zinc-700 dark:text-zinc-300 font-medium"
+                  className="p-3 bg-white border border-stone-100 rounded-2xl hover:border-amber-200 hover:shadow-sm transition-all flex items-center gap-3 text-xs text-stone-700 font-medium"
                 >
                   <span className="text-base">⏱️</span>
                   <span className="truncate">{tool.title}</span>
                 </Link>
               ))}
             </div>
+          </section>
+        )}
+
+        {/* Popular This Week */}
+        <section>
+          <div className="flex items-baseline justify-between mb-8 border-b border-stone-200 pb-4">
+            <h2 className="font-editorial text-3xl text-stone-900">Popular This Week</h2>
+            <Link href="/category/all" className="text-sm font-medium text-violet-600 hover:text-violet-800 flex items-center gap-1 transition-colors">
+              View all <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            {trending.map((tool) => (
+              <div key={tool.id} className="relative group">
+                <Link
+                  href={`/tools/${tool.slug}`}
+                  className="flex items-center gap-4 p-5 bg-white border border-stone-100 rounded-2xl hover:border-amber-200 hover:shadow-md transition-all shadow-sm pr-12"
+                >
+                  <div className="w-10 h-10 flex-shrink-0 rounded-full bg-stone-50 flex items-center justify-center group-hover:bg-amber-50 transition-colors">
+                    <TrendingUp className="w-5 h-5 text-stone-400 group-hover:text-amber-500 transition-colors" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-semibold text-sm text-stone-800 truncate">{tool.title}</h3>
+                    <p className="text-xs text-stone-500 truncate mt-0.5">{tool.description}</p>
+                  </div>
+                </Link>
+                <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <StarButton slug={tool.slug} />
+                </div>
+              </div>
+            ))}
           </div>
         </section>
-      )}
 
-      {/* Browse Categories */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <div>
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Browse Categories</h2>
-          <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">Explore standard categorized micro-tools</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((cat) => (
-            <Link
-              key={cat.slug}
-              href={`/category/${cat.slug}`}
-              className={`block border bg-white dark:bg-zinc-900 p-6 rounded-3xl transition-all shadow-sm flex flex-col justify-between min-h-[160px] ${cat.color}`}
-            >
-              <div className="space-y-2">
-                <span className="text-2xl block">{cat.icon}</span>
-                <h3 className="font-bold text-zinc-900 dark:text-zinc-100 text-sm sm:text-base">{cat.name}</h3>
-                <p className="text-xs text-zinc-500 dark:text-zinc-500 leading-normal">{cat.desc}</p>
-              </div>
-              <div className="pt-4 flex items-center justify-between text-xs font-semibold text-violet-600 dark:text-violet-400">
-                <span>View tools</span>
-                <span>→</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+        {/* The Directory */}
+        <section>
+          <div className="flex items-baseline justify-between mb-8">
+            <h2 className="font-editorial text-4xl text-stone-900">The Directory</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+            {categories.map((cat) => {
+              const Icon = cat.icon;
+              return (
+                <Link
+                  key={cat.slug}
+                  href={`/category/${cat.slug}`}
+                  className="group relative overflow-hidden rounded-3xl bg-white p-8 border border-stone-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 block"
+                >
+                  <div className={`absolute top-0 right-0 w-32 h-32 rounded-bl-full opacity-20 transition-transform group-hover:scale-110 ${cat.color.split(' ')[0]}`} />
+                  <div className="relative z-10">
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 ${cat.color}`}>
+                      <Icon className="w-7 h-7" />
+                    </div>
+                    <h3 className="font-editorial text-2xl font-medium mb-3 group-hover:text-violet-700 transition-colors">{cat.name}</h3>
+                    <p className="text-stone-600 leading-relaxed mb-6 text-sm">{cat.desc}</p>
+                    <div className="flex items-center text-sm font-medium text-amber-600 opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all">
+                      Explore tools <ArrowRight className="w-4 h-4 ml-1" />
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
 
-      {/* Trending Tools */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-        <div>
-          <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Trending Tools</h2>
-          <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-0.5">Most popular calculators and converters used globally</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {trending.map((tool) => (
-            <div key={tool.id} className="relative group">
-              <Link
-                href={`/tools/${tool.slug}`}
-                className="p-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl hover:border-violet-600 transition-all flex items-center justify-between shadow-sm pr-12"
-              >
-                <div className="space-y-1 truncate">
-                  <h3 className="font-bold text-sm text-zinc-800 dark:text-zinc-100 truncate">{tool.title}</h3>
-                  <p className="text-xs text-zinc-500 truncate">{tool.description}</p>
-                </div>
-                <span className="text-xs font-bold px-2 py-1 rounded-lg bg-zinc-50 dark:bg-zinc-950 border border-zinc-200/50 dark:border-zinc-850 text-zinc-450 uppercase flex-shrink-0 ml-3">
-                  {tool.category}
-                </span>
-              </Link>
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <StarButton slug={tool.slug} />
-              </div>
+        <AdSense adSlot="home-page-bottom" />
+      </div>
+
+      {/* Footer */}
+      <footer className="bg-stone-900 text-stone-400 py-12">
+        <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-8">
+          <div className="col-span-1 md:col-span-2">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-8 h-8 rounded bg-violet-600 flex items-center justify-center text-white font-bold text-sm">U</div>
+              <span className="font-editorial font-semibold text-xl text-stone-100">UtilityHub</span>
             </div>
-          ))}
+            <p className="max-w-xs text-sm leading-relaxed">
+              Your ultimate digital utility workspace. Free, private, and beautifully crafted tools for everyone.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-stone-100 font-medium mb-4 text-sm">Platform</h4>
+            <ul className="space-y-2 text-sm">
+              <li><Link href="/category/finance" className="hover:text-amber-400 transition-colors">All Tools</Link></li>
+              <li><Link href="/category/pdf" className="hover:text-amber-400 transition-colors">PDF Utilities</Link></li>
+              <li><Link href="/category/developer" className="hover:text-amber-400 transition-colors">Developer Tools</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-stone-100 font-medium mb-4 text-sm">Info</h4>
+            <ul className="space-y-2 text-sm">
+              <li><span className="text-stone-500">Privacy-first by design</span></li>
+              <li><span className="text-stone-500">No account required</span></li>
+              <li><span className="text-stone-500">100% free forever</span></li>
+            </ul>
+          </div>
         </div>
-      </section>
-
-      <AdSense adSlot="home-page-bottom" className="px-4 sm:px-6 lg:px-8" />
+      </footer>
     </div>
   );
 }
