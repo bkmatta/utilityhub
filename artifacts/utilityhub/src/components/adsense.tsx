@@ -13,7 +13,7 @@ let scriptInjected = false;
 
 function ensureAdSenseScript(publisherId: string) {
   if (scriptInjected || typeof document === 'undefined') return;
-  if (document.querySelector('script[data-adsense-loader]')) {
+  if (document.querySelector('script[src*="adsbygoogle.js"]')) {
     scriptInjected = true;
     return;
   }

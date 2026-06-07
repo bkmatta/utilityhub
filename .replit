@@ -59,3 +59,8 @@ externalPort = 80
 [[ports]]
 localPort = 20690
 externalPort = 4200
+
+[userenv]
+
+[userenv.shared]
+VITE_ADSENSE_PUBLISHER_ID = "ca-pub-1069782428772870"
