@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "UtilityHub"
+version = "1.0.0"
+id = "artifacts/utilityhub"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 20493
+
+[services.development]
+run = "pnpm --filter @workspace/utilityhub run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/utilityhub", "run", "build" ]
+publicDir = "artifacts/utilityhub/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20493"
+BASE_PATH = "/"
