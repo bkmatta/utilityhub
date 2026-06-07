@@ -1,0 +1,31 @@
+kind = "slides"
+previewPath = "/utilityhub-pitch/"
+title = "UtilityHub Pitch Deck"
+version = "1.0.0"
+id = "artifacts/utilityhub-pitch"
+router = "path"
+
+[[integratedSkills]]
+name = "slides"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/utilityhub-pitch/" ]
+localPort = 20690
+
+[services.development]
+run = "pnpm --filter @workspace/utilityhub-pitch run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/utilityhub-pitch", "run", "build" ]
+publicDir = "artifacts/utilityhub-pitch/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "20690"
+BASE_PATH = "/utilityhub-pitch/"

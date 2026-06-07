@@ -1,0 +1,82 @@
+[
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567801",
+    "position": 1,
+    "filepath": "src/pages/slides/Slide1Title.tsx",
+    "title": "UtilityHub",
+    "description": "Title slide — One toolkit. Every calculation.",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567802",
+    "position": 2,
+    "filepath": "src/pages/slides/Slide2Problem.tsx",
+    "title": "The Problem",
+    "description": "Scattered tools across dozens of websites",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567803",
+    "position": 3,
+    "filepath": "src/pages/slides/Slide3Solution.tsx",
+    "title": "The Solution",
+    "description": "Everything in one place, nothing leaves your browser",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567804",
+    "position": 4,
+    "filepath": "src/pages/slides/Slide4Categories.tsx",
+    "title": "8 Tool Categories",
+    "description": "Finance, Health, General, Developer, PDF, Image, Converters, Business",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567805",
+    "position": 5,
+    "filepath": "src/pages/slides/Slide5Finance.tsx",
+    "title": "Finance & Health",
+    "description": "Deep calculator suite for real decisions",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567806",
+    "position": 6,
+    "filepath": "src/pages/slides/Slide6Developer.tsx",
+    "title": "Developer & PDF",
+    "description": "Power tools for professionals",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567807",
+    "position": 7,
+    "filepath": "src/pages/slides/Slide7Converters.tsx",
+    "title": "Converters & Business",
+    "description": "Universal unit conversion and business document generators",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567808",
+    "position": 8,
+    "filepath": "src/pages/slides/Slide8Mobile.tsx",
+    "title": "Mobile Companion",
+    "description": "iOS and Android app built with Expo",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567809",
+    "position": 9,
+    "filepath": "src/pages/slides/Slide9Privacy.tsx",
+    "title": "Privacy by Design",
+    "description": "All processing runs in the browser — zero data sent to servers",
+    "speakerNotes": ""
+  },
+  {
+    "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567810",
+    "position": 10,
+    "filepath": "src/pages/slides/Slide10CTA.tsx",
+    "title": "Try UtilityHub",
+    "description": "Call to action — utilityhub.app",
+    "speakerNotes": ""
+  }
+]
