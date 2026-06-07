@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Route, Switch } from 'wouter';
+import { Route, Switch, useLocation } from 'wouter';
 import Header from './components/header';
 import Footer from './components/footer';
 import Home from './pages/home';
@@ -12,6 +12,14 @@ import TermsPage from './pages/terms';
 import LoginPage from './pages/auth-login';
 import RegisterPage from './pages/auth-register';
 import NotFound from './pages/not-found';
+
+function ScrollToTop() {
+  const [location] = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+  return null;
+}
 
 function App() {
   useEffect(() => {
@@ -26,6 +34,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 transition-colors">
+      <ScrollToTop />
       <Header />
       <main className="min-h-[calc(100vh-64px-80px)]">
         <Switch>
