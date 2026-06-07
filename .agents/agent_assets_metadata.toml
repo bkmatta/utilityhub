@@ -30,3 +30,21 @@ id = "sAM0i-AcgPoxgUaVNjmce"
 uri = "file://artifacts/utilityhub-video/public/audio/vo_value.mp3"
 type = "audio"
 title = "value voiceover"
+
+[[outputs]]
+id = "vv9DNcDXQLZYC1Y_8ak60"
+uri = "file://artifacts/utilityhub-video/public/audio/vo_demo_emi.mp3"
+type = "audio"
+title = "demo_emi voiceover"
+
+[[outputs]]
+id = "3br8hVDTfJUandKq9XI8g"
+uri = "file://artifacts/utilityhub-video/public/audio/vo_demo_json.mp3"
+type = "audio"
+title = "demo_json voiceover"
+
+[[outputs]]
+id = "o72ATXiYA5mte_JyVpX34"
+uri = "file://artifacts/utilityhub-video/public/audio/vo_demo_bmi.mp3"
+type = "audio"
+title = "demo_bmi voiceover"

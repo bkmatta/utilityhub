@@ -47,16 +47,17 @@ const SCENE_START_SEC: Record<string, number> = (() => {
 
 // Audio cue positions match the composite track, which is rebuilt so each
 // narration clip is delayed to its scene's visual start (and each narrated scene
-// is long enough to contain its line). Demo scenes are purely visual and have no
-// cue — the composite is silent through that stretch, so playback runs forward
-// silently and resumes cleanly at the `value` cue. These values must stay in sync
-// with the cumulative SCENE_DURATIONS offsets and the ffmpeg composite build.
+// is long enough to contain its line). Every scene now has its own narration,
+// including the three demo scenes. These values must stay in sync with the
+// cumulative SCENE_DURATIONS offsets and the ffmpeg composite build.
 const AUDIO_CUE_SEC: Partial<Record<string, number>> = {
   intro: 0,
   problem: 6.5,
   reveal: 11.5,
   categories: 16.5,
-  // demo_emi / demo_json / demo_bmi: visual-only, no narration (silent stretch)
+  demo_emi: 26,
+  demo_json: 32.5,
+  demo_bmi: 39,
   value: 45.5,
   outro: 51.5,
 };
@@ -89,16 +90,16 @@ export default function VideoTemplate({
     const audio = audioRef.current;
     if (!audio) return;
     audio.volume = 0.9;
-    // Use explicit audio cue if defined; otherwise let audio play forward (demo scenes).
+    // Every scene has an explicit cue; seek to it when we're off by more than the
+    // epsilon. (A missing cue would just let audio play forward from its current spot.)
     const targetTime = AUDIO_CUE_SEC[baseSceneKey];
     if (targetTime !== undefined && Math.abs(audio.currentTime - targetTime) > AUDIO_SEEK_EPSILON_SEC) {
       audio.currentTime = targetTime;
     }
-    // The voiceover track is shorter than the visual timeline, so it finishes during
-    // the demo scenes. Calling play() on an ended <audio> would restart it FROM ZERO
-    // (the "repeating from start at slide 7" bug). If the track has ended and this
-    // scene has no explicit cue (demo scenes), leave it silent instead of replaying.
-    // Scenes with a cue (value, outro, intro-on-loop) seek first, which clears `ended`.
+    // Safety net: the composite (~56.6s) is slightly shorter than the visual
+    // timeline (57.5s), so it can be `ended` in the brief tail of the outro.
+    // Calling play() on an ended <audio> with no cue would restart it FROM ZERO
+    // (the "repeating from start" bug). Cued scenes seek first, which clears `ended`.
     if (audio.ended && targetTime === undefined) return;
     audio.play().catch(() => {});
   }, [currentSceneKey, baseSceneKey, muted]);
