@@ -1,0 +1,87 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                String             @id @default(uuid())
+  email             String             @unique
+  passwordHash      String?
+  name              String?
+  image             String?
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  favorites         Favorite[]
+  recentTools       RecentTool[]
+  savedCalculations SavedCalculation[]
+}
+
+model ToolCategory {
+  id          String   @id @default(uuid())
+  name        String   @unique
+  slug        String   @unique
+  description String
+  createdAt   DateTime @default(now())
+}
+
+model ToolRecord {
+  id          String   @id
+  slug        String   @unique
+  title       String
+  category    String
+  description String
+  popularity  Int      @default(0)
+  createdAt   DateTime @default(now())
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  userId    String
+  toolId    String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, toolId])
+}
+
+model RecentTool {
+  id        String   @id @default(uuid())
+  userId    String
+  toolId    String
+  visitedAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, toolId])
+}
+
+model SavedCalculation {
+  id          String   @id @default(uuid())
+  userId      String
+  toolId      String
+  title       String
+  inputs      Json     // Input variables used
+  outputs     Json     // Calculated values
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SearchLog {
+  id        String   @id @default(uuid())
+  query     String
+  userId    String?
+  createdAt DateTime @default(now())
+}
+
+model AnalyticsEvent {
+  id         String   @id @default(uuid())
+  eventType  String   // e.g. "tool_use", "category_view"
+  toolId     String?
+  category   String?
+  referrer   String?
+  durationMs Int?
+  createdAt  DateTime @default(now())
+}

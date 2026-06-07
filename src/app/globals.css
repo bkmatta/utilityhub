@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+:root {
+  --background: #fafafa;
+  --foreground: #1c1c1e;
+}
+
+.dark {
+  --background: #09090b;
+  --foreground: #f4f4f5;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  transition: background-color 0.2s ease, color 0.2s ease;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Custom range inputs styles matching modern slider styles */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #7c3aed; /* violet-600 */
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+  transition: transform 0.1s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #7c3aed;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.3);
+  transition: transform 0.1s ease;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  transform: scale(1.15);
+}
+
+/* Print optimizations across the entire application */
+@media print {
+  /* 1. Global site-wide print rules (applies to all pages) */
+  
+  /* Hide global navigation headers, footers, search bars, ads, and interactive buttons */
+  header.sticky,
+  footer,
+  nav.flex.items-center, /* Page-level breadcrumbs */
+  .no-print,
+  .adsbygoogle,
+  [data-ad-client],
+  section.border-t, /* SEO Content section */
+  button,
+  .pt-4.border-t.border-zinc-800, /* Save Record / reset action footers */
+  input[type="range"] {
+    display: none !important;
+  }
+
+  /* Reset layout constraints and padding for clean printing */
+  main,
+  .pt-2.pb-10 {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Force light backgrounds and high contrast black text for printer ink efficiency (applies to light/dark themes) */
+  body, main, div, p, span, h1, h2, h3, h4, h5, h6, table, tr, td, th {
+    background: transparent !important;
+    background-color: transparent !important;
+    color: #000000 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    border-color: #e4e4e7 !important; /* light gray borders */
+  }
+
+  /* Ensure input fields print clearly */
+  input, select, textarea {
+    border: 1px solid #d4d4d8 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+    box-shadow: none !important;
+  }
+
+  /* 2. Tool-Specific Overrides for Document Generators (Invoice/Quotation) */
+  
+  /* When a printable document is active, hide parameters and titles entirely */
+  body:has(.printable-document) .max-w-6xl.mx-auto.space-y-3, /* Page breadcrumbs & title */
+  body:has(.printable-document) .lg\:col-span-7 { /* Left Parameters form column */
+    display: none !important;
+  }
+
+  /* Expand result card block to full page width */
+  body:has(.printable-document) .lg\:col-span-5 {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-column: span 12 / span 12 !important;
+  }
+
+  /* Remove output card margins/padding for pure document page scaling */
+  body:has(.printable-document) .bg-zinc-900.text-white,
+  body:has(.printable-document) .bg-zinc-900 {
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Hide calculation results header */
+  body:has(.printable-document) .bg-zinc-900.text-white h2 {
+    display: none !important;
+  }
+
+  /* Ensure the printable document covers full print area */
+  .printable-document {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+}
+
