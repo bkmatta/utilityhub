@@ -93,6 +93,12 @@ export default function VideoTemplate({
     if (targetTime !== undefined && Math.abs(audio.currentTime - targetTime) > AUDIO_SEEK_EPSILON_SEC) {
       audio.currentTime = targetTime;
     }
+    // The voiceover track is shorter than the visual timeline, so it finishes during
+    // the demo scenes. Calling play() on an ended <audio> would restart it FROM ZERO
+    // (the "repeating from start at slide 7" bug). If the track has ended and this
+    // scene has no explicit cue (demo scenes), leave it silent instead of replaying.
+    // Scenes with a cue (value, outro, intro-on-loop) seek first, which clears `ended`.
+    if (audio.ended && targetTime === undefined) return;
     audio.play().catch(() => {});
   }, [currentSceneKey, baseSceneKey, muted]);
 

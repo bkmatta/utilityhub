@@ -1,0 +1,1 @@
+- [Video audio shorter than visuals](video-audio-shorter-than-visuals.md) — calling play() on an ended <audio> restarts it from 0; guard cue-less scenes when track has ended.
