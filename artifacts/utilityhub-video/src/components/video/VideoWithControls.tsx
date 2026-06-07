@@ -135,7 +135,11 @@ function ControlBar({
 }
 
 export default function VideoWithControls() {
-  const isIframed = typeof window !== 'undefined' && window.self !== window.top;
+  // The MP4 export pipeline injects window.startRecording before load and records
+  // the page top-level — that capture must stay clean (no controls). Any other
+  // context (canvas iframe preview OR the published standalone page) gets controls.
+  const isExportCapture =
+    typeof window !== 'undefined' && typeof window.startRecording === 'function';
 
   const {
     sceneKeys, activeIndex, locked, mountKey, tick,
@@ -181,7 +185,7 @@ export default function VideoWithControls() {
 
   const barVisible = !collapsed || hovering || tapPinned;
 
-  if (!isIframed) return <VideoTemplate />;
+  if (isExportCapture) return <VideoTemplate />;
 
   return (
     <div className="relative w-full h-screen">
