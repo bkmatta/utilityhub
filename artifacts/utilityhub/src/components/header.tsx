@@ -3,6 +3,7 @@ import { Link } from 'wouter';
 import SearchBar from './search-bar';
 import { getToolsByCategory } from '@/lib/registry';
 import { ToolCategory } from '@/types/tool';
+import { logout, getSession } from '@/lib/auth';
 
 export default function Header() {
   const [isDarkMode, setIsDarkMode] = useState(false);
@@ -13,14 +14,8 @@ export default function Header() {
     if (root.classList.contains('dark')) {
       setIsDarkMode(true);
     }
-    const session = localStorage.getItem('user_session');
-    if (session) {
-      try {
-        setUser(JSON.parse(session));
-      } catch {
-        // Safe skip
-      }
-    }
+    const session = getSession();
+    if (session) setUser(session);
   }, []);
 
   const toggleDarkMode = () => {
@@ -109,11 +104,7 @@ export default function Header() {
             <div className="flex items-center gap-3">
               <span className="text-xs text-zinc-500 dark:text-zinc-400 font-medium hidden sm:inline">Hi, {user.name}</span>
               <button
-                onClick={() => {
-                  localStorage.removeItem('user_session');
-                  setUser(null);
-                  window.location.href = '/';
-                }}
+                onClick={() => { logout(); setUser(null); window.location.href = '/'; }}
                 className="text-xs font-semibold px-4 py-2 border border-rose-500/20 text-rose-500 bg-rose-500/5 hover:bg-rose-500/10 rounded-xl transition-all"
               >
                 Sign Out
