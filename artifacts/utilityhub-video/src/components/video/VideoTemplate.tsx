@@ -5,6 +5,9 @@ import { Intro } from './video_scenes/Intro';
 import { Problem } from './video_scenes/Problem';
 import { Reveal } from './video_scenes/Reveal';
 import { Categories } from './video_scenes/Categories';
+import { DemoEMI } from './video_scenes/DemoEMI';
+import { DemoJSON } from './video_scenes/DemoJSON';
+import { DemoBMI } from './video_scenes/DemoBMI';
 import { Value } from './video_scenes/Value';
 import { Outro } from './video_scenes/Outro';
 
@@ -12,7 +15,10 @@ export const SCENE_DURATIONS: Record<string, number> = {
   intro: 4500, 
   problem: 5000, 
   reveal: 4500, 
-  categories: 9000, 
+  categories: 9000,
+  demo_emi: 6500,
+  demo_json: 6500,
+  demo_bmi: 6500,
   value: 4500, 
   outro: 6000 
 };
@@ -22,6 +28,9 @@ const SCENE_COMPONENTS: Record<string, React.ComponentType> = {
   problem: Problem,
   reveal: Reveal,
   categories: Categories,
+  demo_emi: DemoEMI,
+  demo_json: DemoJSON,
+  demo_bmi: DemoBMI,
   value: Value,
   outro: Outro,
 };
@@ -35,6 +44,21 @@ const SCENE_START_SEC: Record<string, number> = (() => {
   }
   return out;
 })();
+
+// Audio cue positions are decoupled from visual timeline.
+// Demo scenes are purely visual — they seek to a safe in-range position so the
+// audio plays ambient background rather than past EOF. value and outro use their
+// original narration positions from the composite track.
+const AUDIO_CUE_SEC: Partial<Record<string, number>> = {
+  intro: 0,
+  problem: 4.5,
+  reveal: 9.5,
+  categories: 14,
+  demo_emi: 22,   // seek near end of categories audio; demo scenes are visual-only
+  // demo_json and demo_bmi: no explicit seek → audio plays forward naturally
+  value: 23,      // original narration cue point
+  outro: 27.5,    // original narration cue point
+};
 
 const AUDIO_SEEK_EPSILON_SEC = 0.18;
 
@@ -64,8 +88,9 @@ export default function VideoTemplate({
     const audio = audioRef.current;
     if (!audio) return;
     audio.volume = 0.9;
-    const targetTime = SCENE_START_SEC[baseSceneKey] ?? 0;
-    if (Math.abs(audio.currentTime - targetTime) > AUDIO_SEEK_EPSILON_SEC) {
+    // Use explicit audio cue if defined; otherwise let audio play forward (demo scenes).
+    const targetTime = AUDIO_CUE_SEC[baseSceneKey];
+    if (targetTime !== undefined && Math.abs(audio.currentTime - targetTime) > AUDIO_SEEK_EPSILON_SEC) {
       audio.currentTime = targetTime;
     }
     audio.play().catch(() => {});
@@ -109,7 +134,7 @@ export default function VideoTemplate({
       <motion.div
         className="absolute top-0 bottom-0 w-[1px] bg-gradient-to-b from-transparent via-[#7C3AED] to-transparent z-0"
         animate={{
-          left: ['10vw', '85vw', '50vw', '20vw', '70vw', '50vw'][sceneIndex] ?? '50vw',
+          left: ['10vw', '85vw', '50vw', '20vw', '15vw', '80vw', '30vw', '70vw', '50vw'][sceneIndex] ?? '50vw',
           opacity: sceneIndex === 2 ? 0 : 0.4
         }}
         transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
@@ -118,7 +143,7 @@ export default function VideoTemplate({
       <motion.div
         className="absolute left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#7C3AED] to-transparent z-0"
         animate={{
-          top: ['20vh', '70vh', '30vh', '80vh', '40vh', '50vh'][sceneIndex] ?? '50vh',
+          top: ['20vh', '70vh', '30vh', '80vh', '25vh', '75vh', '45vh', '40vh', '50vh'][sceneIndex] ?? '50vh',
           opacity: sceneIndex === 2 ? 0 : 0.4
         }}
         transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1] }}
