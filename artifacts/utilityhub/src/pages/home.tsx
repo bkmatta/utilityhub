@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'wouter';
 import SearchBar from '@/components/search-bar';
 import { Tool } from '@/types/tool';
-import { getTrendingTools } from '@/lib/registry';
+import { getTrendingTools, getToolBySlug } from '@/lib/registry';
 import AdSense from '@/components/adsense';
+import { useFavorites } from '@/hooks/useFavorites';
 
 const categories = [
   {
@@ -72,9 +73,45 @@ const categories = [
   },
 ];
 
+function StarButton({ slug, className = '' }: { slug: string; className?: string }) {
+  const { isFavorite, toggle } = useFavorites();
+  const pinned = isFavorite(slug);
+  return (
+    <button
+      onClick={(e) => { e.preventDefault(); e.stopPropagation(); toggle(slug); }}
+      title={pinned ? 'Unpin tool' : 'Pin to top'}
+      className={`flex-shrink-0 w-7 h-7 rounded-lg flex items-center justify-center transition-all ${
+        pinned
+          ? 'text-violet-600 bg-violet-50 dark:bg-violet-950/40 border border-violet-300 dark:border-violet-800'
+          : 'text-zinc-300 dark:text-zinc-600 hover:text-violet-500 hover:bg-violet-50 dark:hover:bg-violet-950/30 border border-transparent hover:border-violet-200 dark:hover:border-violet-800'
+      } ${className}`}
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        fill={pinned ? 'currentColor' : 'none'}
+        stroke="currentColor"
+        strokeWidth={2}
+        className="w-3.5 h-3.5"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z"
+        />
+      </svg>
+    </button>
+  );
+}
+
 export default function Home() {
   const [recentTools, setRecentTools] = useState<Tool[]>([]);
+  const { favorites } = useFavorites();
   const trending = getTrendingTools();
+
+  const pinnedTools = favorites
+    .map((slug) => getToolBySlug(slug))
+    .filter(Boolean) as Tool[];
 
   useEffect(() => {
     const stored = localStorage.getItem('recently_used_tools');
@@ -89,6 +126,7 @@ export default function Home() {
 
   return (
     <div className="space-y-16 pb-24">
+      {/* Hero */}
       <section className="relative text-center py-20 px-4 bg-gradient-to-b from-zinc-100 to-zinc-50 dark:from-zinc-950 dark:to-zinc-950 border-b border-zinc-200/50 dark:border-zinc-900/50 transition-colors">
         <div className="max-w-4xl mx-auto space-y-6">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-violet-50 dark:bg-violet-950/30 border border-violet-200/60 dark:border-violet-900/50 text-violet-600 dark:text-violet-400 rounded-full text-xs font-semibold">
@@ -116,6 +154,42 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Pinned Tools */}
+      {pinnedTools.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="bg-violet-50/60 dark:bg-violet-950/20 border border-violet-200/60 dark:border-violet-900/50 rounded-3xl p-6">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-violet-500">
+                  <path d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.61l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.84-.61l1.285-5.386a.562.562 0 0 0-.182-.557l-4.204-3.602a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+                </svg>
+                <h3 className="text-xs font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400">Pinned Tools</h3>
+              </div>
+              <span className="text-[10px] text-violet-400 dark:text-violet-500">{pinnedTools.length} pinned</span>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+              {pinnedTools.map((tool) => (
+                <div key={tool.id} className="relative group">
+                  <Link
+                    href={`/tools/${tool.slug}`}
+                    className="flex items-center justify-between p-3 bg-white dark:bg-zinc-900 border border-violet-200/60 dark:border-violet-900/40 rounded-2xl hover:border-violet-500 transition-all shadow-sm pr-10"
+                  >
+                    <div className="min-w-0">
+                      <p className="text-xs font-bold text-zinc-800 dark:text-zinc-100 truncate">{tool.title}</p>
+                      <p className="text-[10px] text-zinc-400 truncate mt-0.5">{tool.description}</p>
+                    </div>
+                  </Link>
+                  <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                    <StarButton slug={tool.slug} />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Recently Used */}
       {recentTools.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 shadow-sm">
@@ -136,6 +210,7 @@ export default function Home() {
         </section>
       )}
 
+      {/* Browse Categories */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div>
           <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Browse Categories</h2>
@@ -162,6 +237,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Trending Tools */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
         <div>
           <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Trending Tools</h2>
@@ -169,19 +245,23 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {trending.map((tool) => (
-            <Link
-              key={tool.id}
-              href={`/tools/${tool.slug}`}
-              className="p-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl hover:border-violet-600 transition-all flex items-center justify-between shadow-sm"
-            >
-              <div className="space-y-1 truncate pr-4">
-                <h3 className="font-bold text-sm text-zinc-800 dark:text-zinc-100 truncate">{tool.title}</h3>
-                <p className="text-xs text-zinc-500 truncate">{tool.description}</p>
+            <div key={tool.id} className="relative group">
+              <Link
+                href={`/tools/${tool.slug}`}
+                className="p-5 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-3xl hover:border-violet-600 transition-all flex items-center justify-between shadow-sm pr-12"
+              >
+                <div className="space-y-1 truncate">
+                  <h3 className="font-bold text-sm text-zinc-800 dark:text-zinc-100 truncate">{tool.title}</h3>
+                  <p className="text-xs text-zinc-500 truncate">{tool.description}</p>
+                </div>
+                <span className="text-xs font-bold px-2 py-1 rounded-lg bg-zinc-50 dark:bg-zinc-950 border border-zinc-200/50 dark:border-zinc-850 text-zinc-450 uppercase flex-shrink-0 ml-3">
+                  {tool.category}
+                </span>
+              </Link>
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity">
+                <StarButton slug={tool.slug} />
               </div>
-              <span className="text-xs font-bold px-2 py-1 rounded-lg bg-zinc-50 dark:bg-zinc-950 border border-zinc-200/50 dark:border-zinc-850 text-zinc-450 uppercase flex-shrink-0">
-                {tool.category}
-              </span>
-            </Link>
+            </div>
           ))}
         </div>
       </section>
