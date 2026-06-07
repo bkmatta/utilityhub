@@ -1,21 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'wouter';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link, useLocation } from 'wouter';
 import SearchBar from './search-bar';
 import { getToolsByCategory } from '@/lib/registry';
 import { ToolCategory } from '@/types/tool';
 import { logout, getSession } from '@/lib/auth';
 
+const NAV_CATEGORIES: { slug: ToolCategory; label: string }[] = [
+  { slug: 'finance', label: 'Finance' },
+  { slug: 'health', label: 'Health' },
+  { slug: 'pdf', label: 'PDF Tools' },
+  { slug: 'converters', label: 'Converters' },
+  { slug: 'developer', label: 'Developer' },
+  { slug: 'image', label: 'Image' },
+  { slug: 'business', label: 'Business' },
+];
+
 export default function Header() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [user, setUser] = useState<{ email: string; name: string } | null>(null);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
+  const [location] = useLocation();
+  const navRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const root = window.document.documentElement;
-    if (root.classList.contains('dark')) {
-      setIsDarkMode(true);
-    }
+    if (root.classList.contains('dark')) setIsDarkMode(true);
     const session = getSession();
     if (session) setUser(session);
+  }, []);
+
+  useEffect(() => {
+    setOpenMenu(null);
+  }, [location]);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (navRef.current && !navRef.current.contains(e.target as Node)) {
+        setOpenMenu(null);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const toggleDarkMode = () => {
@@ -34,7 +59,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-white/80 dark:bg-zinc-950/80 backdrop-blur border-b border-zinc-200 dark:border-zinc-800 transition-colors">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-        <Link href="/" className="flex items-center gap-2 group flex-shrink-0">
+        <Link href="/" className="flex items-center gap-2 group flex-shrink-0" onClick={() => setOpenMenu(null)}>
           <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-violet-600 to-indigo-500 flex items-center justify-center text-white font-black text-base shadow-sm group-hover:scale-105 transition-transform">
             U
           </div>
@@ -43,33 +68,43 @@ export default function Header() {
           </span>
         </Link>
 
-        <nav className="hidden md:flex items-center gap-6 h-full text-sm font-medium text-zinc-650 dark:text-zinc-400">
-          {([
-            { slug: 'finance', label: 'Finance' },
-            { slug: 'health', label: 'Health' },
-            { slug: 'pdf', label: 'PDF Tools' },
-            { slug: 'converters', label: 'Converters' },
-            { slug: 'developer', label: 'Developer' },
-            { slug: 'image', label: 'Image' },
-            { slug: 'business', label: 'Business' },
-          ] as { slug: ToolCategory; label: string }[]).map((cat) => {
+        <nav ref={navRef} className="hidden md:flex items-center gap-6 h-full text-sm font-medium text-zinc-650 dark:text-zinc-400">
+          {NAV_CATEGORIES.map((cat) => {
             const tools = getToolsByCategory(cat.slug);
+            const isOpen = openMenu === cat.slug;
             return (
-              <div key={cat.slug} className="relative group h-full flex items-center">
+              <div
+                key={cat.slug}
+                className="relative h-full flex items-center"
+                onMouseEnter={() => setOpenMenu(cat.slug)}
+                onMouseLeave={() => setOpenMenu(null)}
+              >
                 <Link
                   href={`/category/${cat.slug}`}
+                  onClick={() => setOpenMenu(null)}
                   className="hover:text-zinc-900 dark:hover:text-zinc-250 flex items-center gap-1 transition-colors h-full cursor-pointer"
                 >
                   {cat.label}
-                  <span className="text-[7px] opacity-60 group-hover:rotate-180 transition-transform duration-200">▼</span>
+                  <span
+                    className="text-[7px] opacity-60 transition-transform duration-200"
+                    style={{ display: 'inline-block', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+                  >▼</span>
                 </Link>
 
-                <div className="absolute top-[80%] left-1/2 -translate-x-1/2 pt-3 z-50 transition-all duration-200 ease-out opacity-0 translate-y-1.5 scale-95 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:scale-100 group-hover:pointer-events-auto w-72">
+                <div
+                  className="absolute top-[80%] left-1/2 -translate-x-1/2 pt-3 z-50 transition-all duration-200 ease-out w-72"
+                  style={{
+                    opacity: isOpen ? 1 : 0,
+                    transform: isOpen ? 'translateY(0) scale(1)' : 'translateY(6px) scale(0.95)',
+                    pointerEvents: isOpen ? 'auto' : 'none',
+                  }}
+                >
                   <div className="bg-white/95 dark:bg-zinc-900/95 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-xl p-3 grid grid-cols-1 gap-1 backdrop-blur-md">
                     {tools.slice(0, 8).map((tool) => (
                       <Link
                         key={tool.id}
                         href={`/tools/${tool.slug}`}
+                        onClick={() => setOpenMenu(null)}
                         className="flex flex-col p-2 rounded-xl hover:bg-zinc-50 dark:hover:bg-zinc-950 text-left transition-colors"
                       >
                         <span className="text-xs font-bold text-zinc-850 dark:text-zinc-200">{tool.title}</span>
@@ -79,6 +114,7 @@ export default function Header() {
                     {tools.length > 8 && (
                       <Link
                         href={`/category/${cat.slug}`}
+                        onClick={() => setOpenMenu(null)}
                         className="text-[10px] font-bold text-center text-violet-650 dark:text-violet-400 hover:underline pt-2 border-t border-zinc-100 dark:border-zinc-800/80 mt-1"
                       >
                         View all {tools.length} tools →
@@ -113,6 +149,7 @@ export default function Header() {
           ) : (
             <Link
               href="/auth/login"
+              onClick={() => setOpenMenu(null)}
               className="text-xs font-semibold px-4 py-2 border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 rounded-xl hover:bg-zinc-100 hover:text-zinc-900 dark:hover:bg-zinc-850 dark:text-zinc-300 transition-all"
             >
               Sign In
