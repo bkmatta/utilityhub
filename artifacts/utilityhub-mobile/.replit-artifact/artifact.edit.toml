@@ -1,0 +1,25 @@
+kind = "mobile"
+previewPath = "/utilityhub-mobile"
+title = "UtilityHub Mobile"
+version = "1.0.0"
+id = "artifacts/utilityhub-mobile"
+router = "path"
+
+[[integratedSkills]]
+name = "expo"
+version = "1.0.0"
+
+[[services]]
+name = "expo"
+paths = [ "/utilityhub-mobile" ]
+localPort = 20494
+
+[services.development]
+run = "pnpm --filter @workspace/utilityhub-mobile run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/utilityhub-mobile", "run", "build" ]
+serve = "pnpm --filter @workspace/utilityhub-mobile run serve"
+
+[services.env]
+PORT = "20494"
