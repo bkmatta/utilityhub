@@ -1,0 +1,31 @@
+kind = "video"
+previewPath = "/utilityhub-video/"
+title = "UtilityHub Promo Video"
+version = "1.0.0"
+id = "artifacts/utilityhub-video"
+router = "path"
+
+[[integratedSkills]]
+name = "video-js"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/utilityhub-video/" ]
+localPort = 18760
+
+[services.development]
+run = "pnpm --filter @workspace/utilityhub-video run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/utilityhub-video", "run", "build" ]
+publicDir = "artifacts/utilityhub-video/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18760"
+BASE_PATH = "/utilityhub-video/"
