@@ -12,14 +12,14 @@ import { Value } from './video_scenes/Value';
 import { Outro } from './video_scenes/Outro';
 
 export const SCENE_DURATIONS: Record<string, number> = { 
-  intro: 4500, 
+  intro: 6500, 
   problem: 5000, 
-  reveal: 4500, 
-  categories: 9000,
+  reveal: 5000, 
+  categories: 9500,
   demo_emi: 6500,
   demo_json: 6500,
   demo_bmi: 6500,
-  value: 4500, 
+  value: 6000, 
   outro: 6000 
 };
 
@@ -45,19 +45,20 @@ const SCENE_START_SEC: Record<string, number> = (() => {
   return out;
 })();
 
-// Audio cue positions are decoupled from visual timeline.
-// Demo scenes are purely visual — they seek to a safe in-range position so the
-// audio plays ambient background rather than past EOF. value and outro use their
-// original narration positions from the composite track.
+// Audio cue positions match the composite track, which is rebuilt so each
+// narration clip is delayed to its scene's visual start (and each narrated scene
+// is long enough to contain its line). Demo scenes are purely visual and have no
+// cue — the composite is silent through that stretch, so playback runs forward
+// silently and resumes cleanly at the `value` cue. These values must stay in sync
+// with the cumulative SCENE_DURATIONS offsets and the ffmpeg composite build.
 const AUDIO_CUE_SEC: Partial<Record<string, number>> = {
   intro: 0,
-  problem: 4.5,
-  reveal: 9.5,
-  categories: 14,
-  demo_emi: 22,   // seek near end of categories audio; demo scenes are visual-only
-  // demo_json and demo_bmi: no explicit seek → audio plays forward naturally
-  value: 23,      // original narration cue point
-  outro: 27.5,    // original narration cue point
+  problem: 6.5,
+  reveal: 11.5,
+  categories: 16.5,
+  // demo_emi / demo_json / demo_bmi: visual-only, no narration (silent stretch)
+  value: 45.5,
+  outro: 51.5,
 };
 
 const AUDIO_SEEK_EPSILON_SEC = 0.18;

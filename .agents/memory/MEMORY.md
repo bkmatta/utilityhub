@@ -1,1 +1,1 @@
-- [Video audio shorter than visuals](video-audio-shorter-than-visuals.md) — calling play() on an ended <audio> restarts it from 0; guard cue-less scenes when track has ended.
+- [Video voiceover timing](video-audio-shorter-than-visuals.md) — composite VO is adelay-mixed to slide offsets; each slide must outlast its VO (else overlap), and audio must outlast visuals (else play()-on-ended restarts from 0).
