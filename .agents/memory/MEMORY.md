@@ -1,0 +1,1 @@
+- [Video voiceover timing](video-audio-shorter-than-visuals.md) — composite VO is adelay-mixed to slide offsets; each slide must outlast its VO (else overlap), and audio must outlast visuals (else play()-on-ended restarts from 0).
