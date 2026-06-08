@@ -60,7 +60,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-2xl mx-auto z-50">
+    <div ref={containerRef} className="relative w-full max-w-2xl mx-auto z-30">
       <div className="flex items-center bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-md px-4 py-3 gap-3 focus-within:ring-2 focus-within:ring-violet-500 transition-all">
         <span className="text-zinc-400">🔍</span>
         <input
